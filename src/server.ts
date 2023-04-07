@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod"
 import fastify from "fastify";
+import { hash } from "bcryptjs";
 
 const app = fastify();
 const prisma = new PrismaClient()
@@ -20,13 +21,14 @@ app.post("/users", async (request, reply) => {
     })
 
     const {name, email, cellphone, password, address } = createUserSchema.parse(request.body)
+    const passwordHash = await hash(password, 9)
 
     await prisma.user.create({
         data: {
             name,
             email,
             cellphone,
-            password,
+            password: passwordHash,
             address
             
         }

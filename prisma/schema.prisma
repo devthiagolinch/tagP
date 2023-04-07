@@ -12,12 +12,23 @@ datasource db {
 
 
 model user {
-
   id String @id @default(cuid())
   name String
   email String
   cellphone String
   password String
   address String
+  createdAt DateTime @default(now())
+  card Card?
+}
+
+model Card {
+  id String @id @default(cuid())
+  user user @relation(fields: [userId], references: [id])
+  userId String @unique
+  site String
+  instagramURL String
+  twitterURL String
+  whatsappURL String
   createdAt DateTime @default(now())
 }
