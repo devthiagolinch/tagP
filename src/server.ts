@@ -20,7 +20,7 @@ app.post("/users", async (request, reply) => {
         address: z.string()
     })
 
-    const {name, email, cellphone, password, address } = createUserSchema.parse(request.body)
+    const {name, email, cellphone, password, address} = createUserSchema.parse(request.body)
     const passwordHash = await hash(password, 9)
 
     await prisma.user.create({
@@ -36,6 +36,29 @@ app.post("/users", async (request, reply) => {
 
     return reply.status(201).send()
 });
+
+app.post("/card/", async (request) => {
+    const createCardSchema = z.object({
+        instagramURL: z.string(),
+        whatsappURL: z.string(),
+        twitterURL: z.string(),
+        site: z.string(),
+        id: z.string()
+    })
+
+    const { id, instagramURL, site, twitterURL, whatsappURL } = createCardSchema.parse(request.body)
+
+    await prisma.card.create({
+        data: {
+            id,
+            site,
+            instagramURL,
+            twitterURL,
+            whatsappURL
+        }
+    })
+
+})
 
 app.listen({
     host: '0.0.0.0',
